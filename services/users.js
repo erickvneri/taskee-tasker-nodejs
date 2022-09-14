@@ -1,30 +1,30 @@
 "use strict";
+const logger = require("../logger");
 const { createUser } = require("../dao/users");
-const { HttpError }  = require("../util");
 const md5 = require("crypto-js/md5");
 
 /**
  * @param { String } username
  * @param { String } password
- * @returns { String || null } // UUID
+ * @returns { Object }
  */
 const createUserService = async (username, password) => {
+  // Hide password
   password = md5(password).toString();
 
-  let result = null;
-  try {
-    const createRes = await createUser(username, password);
+  // Create record
+  let result = await createUser(username, password);
 
-    if (createRes.rowCount === 0) {
-      return null
-    };
+  // Only if silent unique
+  // constraint is violated
+  if (result.rowCount === 0) return null;
 
-    result = createRes.rows[0].uuid;
-  } catch (err) {
-    throw new Error("system failed to create user record");
-  }
-
-  return result;
+  result = result.rows[0];
+  return {
+    uuid: result.uuid,
+    username: result.username,
+    createdAt: result.created_at
+  };
 };
 
 module.exports = { createUserService };

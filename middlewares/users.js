@@ -1,4 +1,5 @@
 "use strict";
+const logger = require("../logger");
 const { Response, HttpError }  = require("../util");
 const schema = require("schema")(process.env.ENV, {
   options: {
@@ -42,26 +43,16 @@ const schemaMiddleware = (req, res, next) => {
     // Schema validation
     const schemaRes = createUserSchema.validate(req.body);
 
-    if (schemaRes.errors.length > 0)
-      throw new HttpError(
-        400, "Bad request",
-        schemaRes.errors.map(err => `"${err.attribute}" rule violated for attribute "${err.path[0]}"`));
-
-    //TODO: regex validation
-
+    if (schemaRes.errors.length > 0) {
+      error = schemaRes.errors.map(err => `"${err.attribute}" rule violated for attribute "${err.path[0]}"`);
+      throw new Error(error);
+    };
     next();
   } catch (err) {
-    if (err instanceof HttpError) {
-      error = new Response("ERROR", err.statusCode, err.message);
-    } else {
-      throw new HttpError(
-        500, "Internal Server Error",
-        "Server wasn't able to handle the operation");
-    };
-
-    res.status(err.statusCode)
-       .send(error);
-  }
+    logger.warn(err);
+    res.status(400).send(err.message);
+    return;
+  };
 };
 
 module.exports = { schemaMiddleware };

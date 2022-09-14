@@ -23,10 +23,14 @@ const createUser = (username, password) => {
         $3::VARCHAR(255),
         NOW(), NOW()
       WHERE NOT EXISTS (
-        SELECT *
+        SELECT id
         FROM users WHERE
         username = $2)
-      RETURNING uuid;`
+      RETURNING
+        uuid,
+        username,
+        created_at,
+        updated_at;`
     const replacements = [
       userType,
       username,
@@ -36,4 +40,6 @@ const createUser = (username, password) => {
     return query(sqlQuery, replacements);
 };
 
-module.exports = { createUser };
+module.exports = {
+  createUser
+};
