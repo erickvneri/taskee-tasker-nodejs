@@ -25,7 +25,7 @@ exports.up = async function(knex) {
     -- users
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY NOT NULL,
-        uuid VARCHAR(255),
+        uuid UUID,
         user_role_id INT,
         username VARCHAR(255),
         password VARCHAR(255),
@@ -70,7 +70,7 @@ exports.up = async function(knex) {
     -- Projects
     CREATE TABLE IF NOT EXISTS projects (
         id SERIAL PRIMARY KEY NOT NULL,
-        uuid VARCHAR(255),
+        uuid uuid,
         name VARCHAR(255),
         owner_user_id INT,
         description VARCHAR,
@@ -116,6 +116,7 @@ exports.up = async function(knex) {
     -- handle depth level https://duckduckgo.com/?q=postgres+handle+depth+levels&t=brave&atb=v319-1&ia=web&iax=qa
     CREATE TABLE IF NOT EXISTS tasks (
         id SERIAL PRIMARY KEY NOT NULL,
+        uuid UUID,
         task_id INT,
         task_type TASK_TYPE_ENUM DEFAULT 'issue',
         name VARCHAR (255),
@@ -159,6 +160,7 @@ exports.up = async function(knex) {
     -- handle depth level https://duckduckgo.com/?q=postgres+handle+depth+levels&t=brave&atb=v319-1&ia=web&iax=qa
     CREATE TABLE IF NOT EXISTS check_lists (
         id SERIAL PRIMARY KEY NOT NULL,
+        uuid UUID,
         task_id INT,
         check_list_id INT,
         name VARCHAR(255),

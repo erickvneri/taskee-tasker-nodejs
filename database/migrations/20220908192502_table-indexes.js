@@ -28,6 +28,9 @@ exports.up = async function(knex) {
 
     -- tasks indexes
     CREATE INDEX IF NOT EXISTS
+    idx_task_uuid
+    ON tasks (uuid);
+    CREATE INDEX IF NOT EXISTS
     idx_tasks_task_id
     ON tasks (task_id);
     CREATE INDEX IF NOT EXISTS
@@ -38,7 +41,12 @@ exports.up = async function(knex) {
     ON tasks (reporter_user_id);
     CREATE INDEX IF NOT EXISTS
     idx_tasks_assignee
-    ON tasks (assignee_user_id);`;
+    ON tasks (assignee_user_id);
+
+    -- check lists indexes
+    CREATE INDEX IF NOT EXISTS
+    idx_checklist_uuid
+    ON check_lists (uuid);`;
 
     try {
       await query(sqlBatch);

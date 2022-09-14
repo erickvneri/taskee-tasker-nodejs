@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
 -- users
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY NOT NULL,
-    uuid VARCHAR(255),
+    uuid UUID,
     user_role_id INT,
     username VARCHAR(255),
     password VARCHAR(255),
