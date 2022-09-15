@@ -6,9 +6,9 @@
  * responses across the resources.
  */
 class HttpResponse {
-  constructor (status, code, data, error) {
-    this.status = status;
-    this.code = code;
+  constructor (statusMessage, statusCode, data, error) {
+    this.statusMessage = statusMessage;
+    this.statusCode = statusCode;
     this.data = data;
     this.error = error;
   }

@@ -34,7 +34,7 @@ router.post("/", middlewares, async (req, res) => {
     } else {
       logger.info(`user ${user.uuid} created`);
       result = new Response(
-        "SUCESS", 201, user);
+        "SUCCESS", 201, user);
     }
 
   } catch (err) {
@@ -42,7 +42,7 @@ router.post("/", middlewares, async (req, res) => {
     result = new Response(
       "ERROR", 500, null, "Server was unable to fulfill operation");
   } finally {
-    res.status(result.code).send(result);
+    res.status(result.statusCode).send(result);
     return;
   };
 });
