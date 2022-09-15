@@ -1,6 +1,7 @@
 "use strict";
 const logger = require("../logger");
-const { Response, HttpError }  = require("../util");
+const { Response }  = require("../util");
+const { hasForbiddenCharacters, endsOrStartsWithAllowedSpecialCharacter } = require("../util/matchers");
 const schema = require("schema")(process.env.ENV, {
   options: {
     "i18n": [],
@@ -38,19 +39,52 @@ const createUserSchema = schema.Schema.create({
  * @param { Object } next
  */
 const schemaMiddleware = (req, res, next) => {
-  let error;
+  logger.info(req.body, req.headers)
+  logger.warn(req.body, req.headers)
+  let error = null;
+  let message = null;
   try {
     // Schema validation
     const schemaRes = createUserSchema.validate(req.body);
 
+    // Schema didn't match
     if (schemaRes.errors.length > 0) {
-      error = schemaRes.errors.map(err => `"${err.attribute}" rule violated for attribute "${err.path[0]}"`);
-      throw new Error(error);
+      logger.warn("schema rejected user input");
+      message = schemaRes.errors.map(err => `"${err.attribute}" rule violated for attribute "${err.path[0]}"`);
+      error = new Response("ERROR", 400, null, message);
     };
+
+    // Check not allowed special characters
+    const usernameCheck = hasForbiddenCharacters(req.body.username);
+    const passwordCheck = hasForbiddenCharacters(req.body.password);
+    if (usernameCheck || passwordCheck) {
+      logger.warn("user input rejected by regex pattern");
+      message = `user input must not contain special characters ("'\<>%$+^&;:|{}[])`;
+      error = new Response("ERROR", 400, null, message);
+    };
+
+    // Check input tails for allowed
+    // special characters on username
+    const usernameCheck2 = endsOrStartsWithAllowedSpecialCharacter(req.body.username);
+    if (usernameCheck2) {
+      logger.warn("user input rejected by regex pattern");
+      message = `user input must not end or start with special characters (-!#&*()_.,)`;
+      error = new Response("ERROR", 400, null, message);
+    }
+
+    if (error) {
+      res.status(error.statusCode).send(error);
+      return;
+    };
+
+    // Passes current
+    // input validations
     next();
   } catch (err) {
     logger.warn(err);
-    res.status(400).send(err.message);
+    error = new Response(
+      "ERROR", 500, null, "Server was unable to fulfill operation");
+    res.status(error.statusCode).send(error);
     return;
   };
 };
