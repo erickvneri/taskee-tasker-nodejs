@@ -12,5 +12,11 @@
     "knex": "^2.3.0",
     "pg": "^8.8.0",
     "schema": "^0.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.0.3"
+  },
+  "scripts": {
+      "test": "jest"
   }
 }
