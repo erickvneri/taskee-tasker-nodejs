@@ -2,7 +2,7 @@
 const logger = require("../logger");
 const router = require("express").Router();
 const urlencoded = require("body-parser").urlencoded;
-const{ Response, HttpError } = require("../util");
+const{ Response } = require("../util");
 const { schemaMiddleware } = require("../middlewares/users");
 const { createUserService } = require("../services/users");
 

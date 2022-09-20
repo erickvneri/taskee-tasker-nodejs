@@ -1,6 +1,5 @@
 "use strict";
-const logger = require("../logger");
-const { createUser } = require("../dao/users");
+const { createUser } = require("../daos/users");
 const md5 = require("crypto-js/md5");
 
 /**

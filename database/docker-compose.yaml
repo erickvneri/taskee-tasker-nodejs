@@ -5,6 +5,6 @@ services:
     container_name: test-taskee-tasker
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=6gAleons
+      - POSTGRES_PASSWORD=super_test_password
     ports:
       - '5432:5432'

@@ -1,7 +1,6 @@
 "use strict";
 const query = require("../query");
 
-
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }

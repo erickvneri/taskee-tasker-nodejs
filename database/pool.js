@@ -4,7 +4,6 @@ const { Pool } = require("pg");
 
 let pool = null;
 
-
 module.exports = () => {
   if (pool !== null) return pool;
 

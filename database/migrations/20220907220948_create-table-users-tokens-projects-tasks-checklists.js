@@ -70,7 +70,7 @@ exports.up = async function(knex) {
     -- Projects
     CREATE TABLE IF NOT EXISTS projects (
         id SERIAL PRIMARY KEY NOT NULL,
-        uuid uuid,
+        uuid UUID,
         name VARCHAR(255),
         owner_user_id INT,
         description VARCHAR,
